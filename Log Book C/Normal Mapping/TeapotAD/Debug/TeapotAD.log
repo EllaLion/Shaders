@@ -1,0 +1,18 @@
+﻿  stdafx.cpp
+  vboteapot.cpp
+  vboplane.cpp
+  Texture.cpp
+  TeapotAD.cpp
+  scenediffuse.cpp
+  QuatCamera.cpp
+  gl_core_4_3.cpp
+  glutils.cpp
+  glslprogram.cpp
+  drawable.cpp
+  Bitmap.cpp
+  Generating Code...
+glfw3.lib(init.obj) : error LNK2019: unresolved external symbol __imp__vsnprintf referenced in function __glfwInputError
+MSVCRTD.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol __imp__vsnprintf
+glfw3.lib(context.obj) : error LNK2019: unresolved external symbol __imp__sscanf referenced in function _parseGLVersion
+MSVCRTD.lib(vsnprintf.obj) : error LNK2001: unresolved external symbol __imp___vsnprintf
+H:\Year Three\Shaders\Week 8\TeapotAD_Start\TeapotAD_Start\Debug\TeapotAD.exe : fatal error LNK1120: 3 unresolved externals
