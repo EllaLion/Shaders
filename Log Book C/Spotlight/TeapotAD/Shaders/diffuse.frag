@@ -57,8 +57,7 @@ vec3 adsWithSpotlight( )
 	{     
 		return ambient;     
 	} 
-
-	return ReturnColour;
+		return ReturnColour;
 } 
 
 void main() 

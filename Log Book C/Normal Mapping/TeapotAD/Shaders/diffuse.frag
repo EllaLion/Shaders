@@ -21,7 +21,7 @@ void main()
 	vec3 TextureNormal_tangentspace = 2.0 * texture2D( NormalMap, TexCoord ).rgb  - 1.0;
 	TextureNormal_tangentspace = normalize(TextureNormal_tangentspace);
 
-	vec3 diffuse =  intensity * texture2D( DiffuseMap, TexCoord ).rgb * max(0,dot(normalize(TextureNormal_tangentspace), normalize(-TangentLightDirection)));
+	vec3 diffuse =  intensity * texture2D( DiffuseMap, TexCoord ).rgb /** max(0,dot(normalize(TextureNormal_tangentspace), normalize(-TangentLightDirection)))*/;
 	vec3 specular;
 	
 

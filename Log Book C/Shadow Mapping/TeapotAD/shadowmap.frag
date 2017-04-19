@@ -66,7 +66,7 @@ void shadeWithShadow()
 subroutine (RenderPassType)
 void recordDepth()
 {
-    // Outputs gl_FragCoord.z but no code needed as depth is written automatically by Frag Shaders
+   
 }
 
 void main() {

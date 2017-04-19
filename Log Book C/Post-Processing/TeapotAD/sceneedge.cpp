@@ -184,7 +184,7 @@ void SceneEdge::pass1(QuatCamera camera)
 	prog.setUniform("Material.Shininess", 1.0f);
 	plane->render();
 
-	Now set up the teapot 
+	//Now set up the teapot 
 	 model = mat4(1.0f);
 	 setMatrices(camera);
 	 //Set the Teapot material properties in the shader and render
@@ -192,7 +192,7 @@ void SceneEdge::pass1(QuatCamera camera)
 	 prog.setUniform("Material.Kd", 0.7f, 1.0f, 0.7f);
 	 prog.setUniform("Material.Ks", 0.7f, 1.0f, 0.7f);
 	 prog.setUniform("Material.Shininess", 100.0f);
-	 teapot->render();
+	 //teapot->render();
 
 }
 
@@ -247,8 +247,6 @@ void SceneEdge::compileAndLinkShader()
     try {
     	prog.compileShader("Shaders/diffuse.vert");
     	prog.compileShader("Shaders/diffuse.frag");
-		/*prog.compileShader("edge.vs");
-    	prog.compileShader("edge.fs");*/
     	prog.link();
     	prog.validate();
     	prog.use();

@@ -71,7 +71,7 @@ void SceneDiffuse::setLightParams(QuatCamera camera)
 	prog.setUniform("intensity", vec3(0.8f, 0.8f, 0.8f));
 	prog.setUniform("ambientintensity", vec3(0.1, 0.1, 0.1));
 	prog.setUniform("exponent", 100.0f);
-	prog.setUniform("cutoffO", 10.0f);
+	prog.setUniform("cutoffO", 100.0f);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
