@@ -85,8 +85,9 @@ void pass2()
 
 	//Ambient lighting included with the diffuse model
 	FragColor = vec4(diffuseModel(pos, norm, colour),0.0);
-	FragColor += vec4(specularModel(pos, norm, spec),0.0);
-	//FragColor += spec;
+	//FragColor += vec4(specularModel(pos, norm, spec),0.0);
+	//FragColor = vec4(specularModel(pos, norm, spec),0.0);
+	//FragColor = vec4(colour, 0.0);
 	}
 
 void main() {

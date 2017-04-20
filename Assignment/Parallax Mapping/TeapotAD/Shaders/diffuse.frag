@@ -5,6 +5,14 @@ in vec3 Normal;
 in vec2 TexCoords; 
 in vec3 EyePos;
 
+in VS_OUT {
+    vec3 FragPos;
+    vec2 TexCoords;
+    vec3 TangentLightPos;
+    vec3 TangentViewPos;
+    vec3 TangentFragPos;
+} fs_in;
+
 struct Light
 {
 	vec3 position;
@@ -22,56 +30,44 @@ uniform sampler2D HeightTex;
 uniform sampler2D NormalTex;
 uniform Light light;
 
-// Diffuse Lighting.
-vec3 diffuseModel( vec3 pos, vec3 norm, vec3 diff )
-{
-    vec3 s = normalize(vec3(light.position) - pos);
-    float sDotN = max( dot(s,norm), 0.0 );
-    vec3 diffuse = clamp(light.ambientIntensity * diff + light.diffuseIntensity 
-	* diff * sDotN,0,1);
+uniform bool parallax;
+uniform float height_scale;
 
-    return diffuse;
+vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
+{ 
+    float height =  texture(HeightTex, texCoords).r;     
+    return texCoords - viewDir.xy / viewDir.z * (height * height_scale);            
 }
 
-// Specular Lighting.
-vec3 specularModel( vec3 pos, vec3 norm, vec4 spec)
-{
-	vec3 VertexToEye = normalize(EyePos - pos);
-	vec3 direction = normalize(light.lightDirection);
-	vec3 LightReflect = normalize(reflect(direction, norm));
-	float SpecularFactor = dot(VertexToEye, LightReflect);
-	SpecularFactor = pow(SpecularFactor, 50 );
-	
-	if(SpecularFactor > 0)
-	{
-		return light.diffuseIntensity * spec.rgb * SpecularFactor;
-	}	
-	else return vec3(0.0,0.0,0.0);
-}
+
 
 void main() 
 {   
-	//Scale factor. 
-	float scale = 0.05;
 
-	//Bias Factor.
-	float bias = scale * -0.5;
+    // Offset texture coordinates with Parallax Mapping
+    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
+    vec2 texCoords = fs_in.TexCoords;
+    if(parallax)
+        texCoords = ParallaxMapping(fs_in.TexCoords,  viewDir);
+        
+    // Obtain normal from normal map
+    vec3 normal = texture(NormalTex, texCoords).rgb;
+    normal = normalize(normal * 2.0 - 1.0);   
+   
+    // Get diffuse color
+    vec3 color = texture(DiffuseTex, texCoords).rgb;
+    // Ambient
+    vec3 ambient = 0.1 * color;
+    // Diffuse
+    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
+    float diff = max(dot(lightDir, normal), 0.0);
+    vec3 diffuse = diff * color;
+    // Specular    
+    vec3 reflectDir = reflect(-lightDir, normal);
+    vec3 halfwayDir = normalize(lightDir + viewDir);  
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
-	//Get the height of the current fragment
-	float height = texture2D(HeightTex, TexCoords).r;
-
-	//Create the offset.
-	float HSB = height * scale + bias;
-
-	//Normalise the eye position.
-	vec3 V = normalize(EyePos);
-
-	//Get adjusted texture position in the view direction,
-	vec2 tn = TexCoords + HSB * V.xy;
-	
-	//apply diffuse and specular lighting.
-	FragColor = vec4(diffuseModel(VertPosition, vec3(texture2D(NormalTex, tn)), vec3(texture2D(DiffuseTex, tn))),1);
-	FragColor += vec4(specularModel(VertPosition, vec3(texture2D(NormalTex, tn)), texture2D(SpecularTex, tn)),1);
-//	FragColor += vec4(light.ambientIntensity,1);
+    vec3 specular = vec3(0.2) * spec;
+    FragColor = vec4(ambient + diffuse + specular, 1.0f);
 }
 
